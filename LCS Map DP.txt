@@ -1,0 +1,23 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+#define IOS ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+string s, t;
+unordered_map<string, int> dp;
+int len;
+int LCS(int n, int m){
+    if(n == 0 || m == 0) return 0;
+    string key = to_string(n) + to_string(m);
+    if(dp.find(key) != dp.end()) return dp[key];
+    if(s[n-1] == t[m-1]) return dp[key] = 1 + LCS(n-1, m-1);
+    else return dp[key] = max(LCS(n-1, m), LCS(n, m-1));
+}
+
+signed main(){
+    IOS
+    cin>>s>>t;
+    int n = s.length(), m = t.length();
+    len = LCS(n,m);
+    cout<<len<<endl;
+    return 0;
+}

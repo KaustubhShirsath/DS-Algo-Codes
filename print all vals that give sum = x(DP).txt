@@ -1,0 +1,102 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int n;
+int v[101];
+
+int dp[101][100001];
+int back[101][100001];
+
+int rec(int level,int left){
+    // pruning
+    if(left<0)return 0;
+    // base case
+    if(level==n){
+        if(left==0){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    // save check
+    if(dp[level][left]!=-1){
+        return dp[level][left];
+    }
+    // compute if not saved
+    int ans = 0;
+    if(rec(level+1,left)){
+        ans = 1;
+        back[level][left]|=1;
+    }
+    if(rec(level+1,left-v[level])){
+        ans = 1;
+        back[level][left]|=2;
+    }
+    // save and return
+    return dp[level][left] = ans;
+}
+
+vector<vector<int>> allSol;
+vector<int> ansSet;
+void generate(int level,int left){ // All solution
+    if(level==n){
+        allSol.push_back(ansSet);
+        return;
+    }
+    if(back[level][left]==0){
+        // Never possible
+    }else if(back[level][left]==1){
+
+        generate(level+1,left);
+
+    }else if(back[level][left]==2){
+
+        ansSet.push_back(v[level]);
+        generate(level+1,left-v[level]);
+        ansSet.pop_back();
+
+    }else{ // case 3
+        generate(level+1,left);   
+
+        ansSet.push_back(v[level]);
+        generate(level+1,left-v[level]);
+        ansSet.pop_back();
+    }
+}
+
+void solve(){
+    memset(dp,-1,sizeof(dp));
+    memset(back,0,sizeof(back));
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>v[i];
+    }
+    // {2,3,5,6}
+    int q;
+    cin>>q;
+    while(q--){
+        int x;
+        cin>>x; // 8
+        int pos = rec(0,x);
+        if(!pos){
+            cout<<"0"<<endl;
+        }else{
+            cout<<"1"<<endl;
+            generate(0,x);
+            for(auto a:allSol){
+                for(auto v:a)
+                    cout<<v<<" ";
+                cout<<endl;
+            }
+            allSol.clear();
+            cout<<endl;
+        }
+        // {2,6}
+    }
+}    
+
+signed main(){
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    //int _t;cin>>_t;while(_t--)
+    solve();
+}

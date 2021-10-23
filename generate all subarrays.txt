@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+#define int long long
+#define IOS ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+using namespace std;
+int n;
+vector<vector<int>> subs;
+vector<int> a;
+
+void rec(int l, int r){
+    if(r == n) return;
+    else if(l > r) rec(0,r+1);
+    else{
+        vector<int> temp;
+        for(int i = l; i <= r; i++) temp.push_back(a[i]);
+        subs.push_back(temp);
+        rec(l+1,r);
+    }
+}
+
+void solve(){
+    cin>>n;
+    a.resize(n);
+    for(int i = 0; i < n; i++) cin>>a[i];
+    rec(0,0);
+    for(auto v: subs){
+        for(int x: v){
+            cout<<x<<" ";
+        }
+        cout<<endl;
+    }
+}
+
+signed main(){
+    IOS
+    int _t;cin>>_t;
+    while(_t--) solve();
+    return 0;
+}

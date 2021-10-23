@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define int long long
+
+vector<int> kmp_fun(string s){
+    int n = s.length();
+    vector<int> kmp(n+1);
+    int i = 0, j = -1;
+    kmp[0] = -1;
+    while(i < n){
+        while(j != -1 && s[i] != s[j]) j = kmp[j];
+        i++;j++;
+        kmp[i] = j;
+    }
+    return kmp;
+}
+
+signed main(){
+    string s;
+    cin>>s;
+    for(int x: kmp_fun(s)) cout<<x<<" ";
+} 

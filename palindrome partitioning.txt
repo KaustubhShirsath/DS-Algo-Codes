@@ -1,0 +1,39 @@
+/*
+Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.
+*/
+
+class Solution {
+public:
+    vector<vector<string>> res;
+    vector<vector<bool>> dp;
+    vector<string> ans;
+    string s;
+    int n;
+    
+    void dfs(int start){
+        if(start == n){
+            res.push_back(ans); 
+            return;
+        }    
+        for(int i = start; i < n; i++){
+            if(dp[start][i] == 0) continue;
+            ans.push_back(s.substr(start, i-start+1));
+            dfs(i+1);
+            ans.pop_back();
+        }    
+    }
+    vector<vector<string>> partition(string S) {
+        s = S;
+        n = s.length();
+        dp.resize(n, vector<bool>(n, 0));
+        for(int k = 1; k <= n; k++){
+            for(int i = 0; i < n; i++){
+                int j = i + k - 1;
+                if(j >= n) break;
+                dp[i][j] = (s[i] == s[j]) && (i+1 > j-1 || dp[i+1][j-1]);
+            }
+        }
+        dfs(0);
+        return res;
+    }
+};

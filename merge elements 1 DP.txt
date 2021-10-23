@@ -1,0 +1,30 @@
+/*
+You are given N elements, in an array A. You can take any 2 consecutive elements a and b and merge them. On merging you get a single element with value (a+b)%100 and this process costs you a*b. After merging you will place this element in place of those 2 elements.
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+int n, arr[501], dp[501][501];
+
+int rec(int l,int r){
+    if(l == r) return 0;
+    if(dp[l][r] == -1){
+        int ans = 1e9, tot = 0, sum = 0;
+        for(int i = l; i <= r; i++)tot += arr[i];
+        for(int mid = l; mid < r; mid++){
+            sum += arr[mid];
+            ans = min(ans,rec(l,mid)+rec(mid+1,r)+ ((sum)%100)*((tot-sum)%100));
+        }
+        dp[l][r]=ans;
+    }
+    return dp[l][r];
+}
+
+signed main(){
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    cin>>n;
+    for(int i = 0; i < n; i++) cin>>arr[i];
+    memset(dp, -1, sizeof(dp));
+    cout<<rec(0,n-1)<<endl;
+}

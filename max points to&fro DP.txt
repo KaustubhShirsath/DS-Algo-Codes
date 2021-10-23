@@ -1,0 +1,44 @@
+/*
+find the maximum score if you have to go from (0,0) -> (n-1,m-1) and come back.
+you will get points at a cell only once.
+*/
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+int n,m;
+int arr[50][50];
+int dp[50][50][50];
+int maximum(int a, int b, int c, int d){
+    return max(max(a,b), max(c,d));
+}
+int rec(int r1, int c1, int r2){//r1+c1 = r2+c2
+    if(r1 >= n || c1 >= m || r2 >= n)return -1e9;
+    if(r1==n-1 && c1==m-1 && r2==n-1)return arr[r1][c1];
+    if(dp[r1][c1][r2] != -2e9) return dp[r1][c1][r2];
+    int ans = (r1==r2) ? arr[r1][c1] : arr[r1][c1] + arr[r2][r1+c1-r2];
+    ans += maximum(rec(r1+1,c1,r2+1),rec(r1+1,c1,r2),rec(r1,c1+1,r2+1),rec(r1,c1+1,r2)); 
+    return dp[r1][c1][r2] = ans;
+}
+void solve(){
+    cin>>n>>m;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            cin>>arr[i][j];
+        }
+    }
+    for(int i = 0; i < 50; i++){
+        for(int j = 0; j < 50; j++){
+            for(int k = 0; k < 50; k++){
+                    dp[i][j][k] = -2e9;
+            }
+        }
+    }
+    cout<<rec(0,0,0)<<endl;
+}
+signed main(){
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    //int t;cin>>t;
+    //while(t--)
+    solve();
+    return 0;
+}

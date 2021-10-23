@@ -1,0 +1,35 @@
+/*
+Alice is rearranging her library. She takes the innermost shelf and reverses the order of books. She breaks the walls of the shelf. In the end, there will be only books and no shelf walls. Print the order of books.
+Opening and closing walls of shelves are shown by '/' and '\' respectively whereas books are represented by lower case alphabets.
+
+Sample Input
+/u/love\i\
+Sample Output
+iloveu
+*/
+
+#include<bits/stdc++.h>
+#define IOS ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+using namespace std;
+
+signed main(){
+    IOS
+    string s, curr;
+	cin >> s;
+	stack<string> st;
+	for(int i = 0; i < s.size(); i++) {
+		if(s[i] == '/') {
+			st.push(curr);
+			curr.clear();
+		}
+        else if(s[i] == '\\') {
+			reverse(curr.begin(), curr.end());
+			string top = st.top();
+			st.pop();
+			top.append(curr);
+			curr = top;
+		}
+        else curr.push_back(s[i]);
+	}
+	cout<<curr<<endl;
+}

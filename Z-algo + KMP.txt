@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define int long long
+
+vector<int> z_fun(string s){
+    int n = s.length();
+    vector<int> z(n);
+    int l = 0, r = 0;
+    for(int i = 1; i < n; i++){
+        if(i <= r) z[i] = min(r-i+1, z[i-l]);
+        while(i+z[i] < n && s[z[i]] == s[i + z[i]]) ++z[i];
+        if(i + z[i] -1 > r) l = i, r = i + z[i] - 1;
+    }
+    return z;
+}
+vector<int> kmp_fun(string s){
+    int n = s.length();
+    vector<int> kmp(n+1);
+    int i = 0, j = -1;
+    kmp[0] = -1;
+    while(i < n){
+        while(j != -1 && s[i] != s[j]) j = kmp[j];
+        i++;j++;
+        kmp[i] = j;
+    }
+    return kmp;
+}
+
+signed main(){
+    string s;
+    cin>>s;
+    // string pal = s;
+    // reverse(s.begin(), s.end());
+    // s += "#" + pal;
+    // cout<<"   ";
+    for(char x: s) cout<<x<<" ";
+    cout<<endl;
+    for(int x: z_fun(s)) cout<<x<<" ";
+}
+
+/*
+
+KMP 
+a b a a b a b a
+0 0 1 1 2 3 2 3 
+
+a b a
+0 0 1
+
+a b a # a b a a b a b a
+0 0 1 0 1 2 3 1 2 3 2 3 
+
+a b c a b c d c b a c
+0 0 0 1 2 3 0 0 0 1 0 
+*/
+
+/*
+Z algo
+
+a b a b a b a b 
+0 0 6 0 4 0 2 0 
+*/

@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+vector<vector<int>>g;
+vector<int> par,vis;
+int n,m;
+bool iscycle = false;
+void dfs(int node,int parent){
+    vis[node] = 1;
+    par[node] = parent;
+    for(int child: g[node]){
+        if(!vis[child]) dfs(child,node);
+        else if(child != parent) {
+            iscycle = true;
+            return;
+        }
+    }
+}
+
+int main(){
+    cin>>n>>m;
+    par.assign(n+1,0); vis.assign(n+1,0);
+    g.assign(n+1,vector<int>());
+    for(int i=0;i<m;i++){
+        int a,b;
+        cin>>a>>b;
+        g[a].push_back(b);
+        g[b].push_back(a);
+    }
+    for(int i = 1; i <= n; i++) 
+        if(!vis[i]){
+           	dfs(i,0); 
+        	if(iscycle){
+                cout<<"YES\n";
+                return 0;
+            }
+        } 
+    cout<<"NO\n";
+}

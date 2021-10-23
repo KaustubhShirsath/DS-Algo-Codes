@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+void pr(vector<int> sum0, vector<int> sum1){
+      cout<<"sum0 = ";
+      for(int a: sum0)cout<<a<<" ";
+      cout<<endl;
+      cout<<"sum1 = ";
+      for(int a: sum1)cout<<a<<" ";
+      cout<<endl;
+}
+vector<int> solve(vector<int> arr){
+    int n = arr.size();
+    vector<int> sumvals;
+    for(int masks = 0; masks < (1<<n); masks++){
+        int sum = 0;
+        for(int j = 0; j < n; j++){
+           if((masks>>j) & 1) sum += arr[j];
+        }
+        sumvals.push_back(sum);
+    }
+    sort(sumvals.begin(), sumvals.end());
+    return sumvals;
+}
+
+signed main(){
+  int t;
+  cin>>t;
+  while(t--){
+      int n, x, c = 0;
+      cin>>n>>x;
+      vector<int> arr(n), newarr[2];
+      for(int i = 0; i < n; i++){
+          cin>>arr[i];
+          newarr[i&1].push_back(arr[i]);
+      }
+      vector<int> sum0 = solve(newarr[0]); //include all possible 2sums of half array
+      vector<int> sum1 = solve(newarr[1]); //include all possible 2sums of restof array
+      //pr(newarr[0],newarr[1]);
+      //pr(sum0,sum1);
+      int ans = 0;
+      for(int ele: sum0){
+          ans += upper_bound(sum1.begin(), sum1.end(),x-ele) - sum1.begin();
+      }
+      cout<<"subsets = "<<ans<<endl;
+  }
+}

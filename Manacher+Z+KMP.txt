@@ -1,0 +1,96 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define int long long
+
+string pre(string s) {
+	int n = s.size();
+	string t = "#";
+	for (int i = 0; i < n; i++) {
+		t.push_back(s[i]);
+		t.push_back('#');
+	}
+	return t;
+}
+
+vector<int> manacher(string s) {
+	int mx = 0, id = 0, n = s.size();
+	vector<int> man(n,0);
+	for(int i = 0; i < n; i++) {
+		if(i < mx)   man[i] = min(mx-i, man[2*id-i]);
+		else man[i] = 0;
+
+		while((i-man[i]-1 >= 0) && (i+man[i]+1 < n) && s[i-man[i]-1] == s[i+man[i]+1]) man[i]++;
+
+		if(man[i]+i > mx) {
+			mx = man[i]+i;
+			id = i;
+		}
+	}
+	return man;
+}
+
+vector<int> z_fun(string s){
+    int n = s.length();
+    vector<int> z(n);
+    int l = 0, r = 0;
+    for(int i = 1; i < n; i++){
+        if(i <= r) z[i] = min(r-i+1, z[i-l]);
+        while(i+z[i] < n && s[z[i]] == s[i + z[i]]) ++z[i];
+        if(i + z[i] -1 > r) l = i, r = i + z[i] - 1;
+    }
+    return z;
+}
+vector<int> kmp_fun(string s){
+    int n = s.length();
+    vector<int> kmp(n+1);
+    int i = 0, j = -1;
+    kmp[0] = -1;
+    while(i < n){
+        while(j != -1 && s[i] != s[j]) j = kmp[j];
+        i++;j++;
+        kmp[i] = j;
+    }
+    return kmp;
+}
+
+signed main(){
+    string s;
+    cin>>s;
+    s = pre(s);
+    for(char x: s) cout<<x<<" ";
+    cout<<endl;
+    for(int x: manacher(s)) cout<<x<<" ";
+}
+
+/*
+KMP algo
+
+a b a a b a b a
+0 0 1 1 2 3 2 3 
+
+a b a
+0 0 1
+
+a b a # a b a a b a b a
+0 0 1 0 1 2 3 1 2 3 2 3 
+
+a b c a b c d c b a c
+0 0 0 1 2 3 0 0 0 1 0 
+*/
+
+/*
+Z algo
+
+a b a b a b a b 
+0 0 6 0 4 0 2 0 
+*/
+
+/*
+Manacher algo
+
+# a # b # a # c # d # 
+0 1 0 3 0 1 0 1 0 1 0 
+
+# a # b # c # c # b # a # 
+0 1 0 1 0 1 6 1 0 1 0 1 0 
+*/

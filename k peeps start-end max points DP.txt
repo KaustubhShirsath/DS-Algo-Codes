@@ -1,0 +1,70 @@
+/*
+k people want to go from (0,0) to (n-1,m-1), find the max score you can get.
+PS. you can get points at a cell only once
+*/
+
+// # States =>      s =  N^k * m
+// # Transitions => t =  k*2^k + k + log(k) + log(N^k*m)
+// TC:              O(s*(t+1))
+
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+int n,m,k;
+int arr[50][50];
+map< pair<vector<int>,int> , int> dp;
+
+int rec(vector<int> rowvals, int c1){//rowvals = r1,r2,r3...,rk; c2 = r1+c1-r2...
+   vector<int> colvals;
+   int krows = 0, kcols = 0;
+   for(int i = 0; i < k; i++){
+       colvals.push_back(rowvals[0]+c1-rowvals[i]);
+       if(rowvals[i] >= n || colvals[i] >= m) return -1e9;
+       krows += rowvals[i];
+       kcols += colvals[i];
+   }
+   if(krows == k*(n-1) && kcols == k*(m-1)) return arr[n-1][m-1];
+   if(dp.find({rowvals,c1}) != dp.end()) return dp[{rowvals,c1}];
+   set<pair<int, int>> s;
+   for(int i = 0; i < k; i++){
+       s.insert({rowvals[i], colvals[i]});
+   }
+   int temp = 0, ans = -1e9;
+   for(auto p: s){
+       temp += arr[p.first][p.second];
+   }
+   for(int mask = 0; mask < (1<<k); mask++){
+       vector<int> rowtmp = rowvals;
+       int ctmp = c1;
+       for(int i = 0; i < k; i++){
+           if(mask&(1<<i)){
+               rowtmp[i]++;
+           }
+           else{
+               if(i == 0) ctmp++;
+           }
+       }
+       ans = max(ans, temp + rec(rowtmp, ctmp));
+   }
+   return dp[{rowvals,c1}] = ans;
+}
+
+void solve(){
+    cin>>n>>m>>k;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            cin>>arr[i][j];
+        }
+    }
+    vector<int> rows;
+    for(int i = 0; i < k; i++) rows.push_back(0);
+    cout<<rec(rows,0)<<endl;
+}
+
+signed main(){
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    //int t;cin>>t;
+    //while(t--)
+    solve();
+    return 0;
+}
