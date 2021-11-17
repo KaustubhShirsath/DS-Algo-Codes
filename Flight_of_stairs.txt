@@ -1,0 +1,47 @@
+/*
+John is playing on a flight of stairs, and he has invented a game. 
+He is currently at stair number P and wants to go to stair number F, 
+and he can do so by using only two operations, either jump up U stairs or go down D stairs at a time. 
+He can neither go beyond the topmost stair and nor can he go below the lowermost stair 
+i.e. he will only play on the stairs. He defines these up and down goings as an operation.
+You are given the number of stairs on the staircase as N along with 
+the values of F, P, U, and D as input, you have to find the minimum number 
+of operations he has to perform to reach the final stair F.
+If John cannot reach the stair anyway, return -1.
+*/
+
+#include<bits/stdc++.h>
+#define int long long
+#define IOS ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+using namespace std;
+int solve(int n,int s,int e,int u,int d){
+    vector<int> visited(n+1,0);
+    queue<pair<int,int>> q;
+    q.push({s,0});
+    visited[s] = 1;
+    while(!q.empty()){
+        pair<int, int> p = q.front();
+        q.pop();
+        if(p.first == e) return p.second;
+        if(p.first + u <= n && p.first + u == e) return p.second+1;
+        if(p.first - d >= 1 && p.first - d == e) return p.second+1;
+        if(p.first + u <= n && visited[p.first + u] == 0){
+            q.push({p.first + u, p.second+1});
+            visited[p.first + u] = 1;
+        }
+        if(p.first - d >= 1 && visited[p.first - d] == 0){
+            q.push({p.first - d, p.second+1});
+            visited[p.first - d] = 1;
+        }
+    }
+    return -1;
+}
+
+signed main(){
+    IOS
+    int n,s,e,u,d;
+    cin>>n>>s>>e>>u>>d;
+    int ans = solve(n,s,e,u,d);
+    cout<<ans<<endl;
+    return 0;
+}
